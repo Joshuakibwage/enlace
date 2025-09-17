@@ -1,0 +1,88 @@
+---
+description: Core conventions, architectural principles, and coding standards for the Enlace (Link-in-Bio) project.
+globs:
+alwaysApply: true
+---
+
+## Project Overview
+This document defines the rules and conventions for building and maintaining **Enlace**, a modern link-in-bio platform.  
+The application enables users to create a profile, showcase a bio, and share customizable links. It supports **dark and light modes** with a **purple accent theme** for a clean and aesthetic user experience.  
+
+All contributors must adhere to these standards to ensure **consistency, maintainability, and scalability** across the codebase.
+
+---
+
+## Technology Stack
+The project uses the following stack. Do not introduce new libraries or frameworks unless explicitly approved.
+
+- **Language:** TypeScript  
+- **Framework:** Next.js (App Router)  
+- **Database & Auth:** Supabase (Postgres, Auth, Storage)  
+- **Styling:** Tailwind CSS with `shadcn/ui` components  
+- **Theme:** Dark/Light mode with purple as the primary accent color  
+- **State Management:**  
+  - Default: Server Components for server state  
+  - Local: `useState` or `useReducer` in Client Components only  
+- **API Communication:**  
+  - Server Actions for all mutations (profile updates, link creation, deletion)  
+  - Server Components for data fetching (Supabase client)  
+
+---
+
+## Architecture & Code Style
+
+### Directory Structure
+Follow the standard Next.js App Router convention:  
+- `/app` → routes and pages  
+- `/components/ui` → `shadcn/ui` components  
+- `/components` → custom reusable components (`ProfileCard`, `LinkCard`, `ThemeToggle`)  
+- `/lib` → Supabase client setup, utility functions, Server Actions  
+
+### Components
+- **Server Components:** Preferred for fetching and rendering data.  
+- **Client Components:** Use only when interactivity (hooks, event listeners, local state) is required.  
+
+### Naming Conventions
+- **Components:** PascalCase → `ProfileCard.tsx`, `LinkCard.tsx`  
+- **Utilities & Server Actions:** camelCase → `createLink.ts`, `getProfile.ts`  
+
+### Error Handling
+- Wrap Supabase queries and mutations in `try/catch`.  
+- Use Next.js `error.tsx` for segment-level error boundaries.  
+
+### Security & Secrets
+- Never hardcode API keys or secrets.  
+- Use `.env.local` for environment variables:  
+  - `NEXT_PUBLIC_SUPABASE_URL`  
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`  
+  - `SUPABASE_SERVICE_ROLE_KEY` (server-only)  
+
+---
+
+## Code Patterns
+
+✅ **Do this:**  
+- Use **Server Actions** for profile updates and link CRUD operations.  
+- Fetch profile and links data in **Server Components**.  
+- Keep UI consistent with `shadcn/ui` and Tailwind theme tokens.  
+- Implement dark/light mode toggle via `ThemeToggle` component.  
+
+❌ **Do not do this:**  
+- Do not fetch data on the client with `useEffect`/`useState` in page components.  
+- Do not create redundant API routes when Server Actions suffice.  
+- Do not override Tailwind/shadcn styling inconsistently.  
+
+---
+
+## Verification Checklist
+Before merging or finalizing any code, verify the following:  
+
+- [ ] Next.js App Router is used correctly.  
+- [ ] Server Components handle data fetching.  
+- [ ] Server Actions handle all mutations.  
+- [ ] Supabase client is used for every DB/auth interaction.  
+- [ ] `shadcn/ui` is used for UI consistency.  
+- [ ] Environment variables are used for secrets—nothing hardcoded.  
+- [ ] Dark/Light theme works correctly with purple as the accent color.  
+
+---
